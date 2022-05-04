@@ -1,5 +1,4 @@
 {
-
     "liveServer.settings.wait": 500,
     "editor.wordWrap": "on",
     "files.exclude": {
@@ -11,5 +10,5 @@
         "venv": true,
         ".pytest*": true,
         "**/__pycache__": true,
-    },
+    }
 }

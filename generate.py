@@ -25,7 +25,9 @@ def format_data(data: dict, phone: str, email: str) -> dict:
     data["zipLanguages"] = languages
 
     # Fix Dates
-    for category in {"work", "volunteer", "education", "awards", "publications"}.intersection(data.keys()):
+    for category in {"work", "volunteer", "education", "awards", "publications"}.intersection(
+        data.keys()
+    ):
         for index, item in enumerate(data[category]):
             for detail in item.keys():
                 if "date" in detail.lower():
@@ -50,7 +52,14 @@ def render(data: dict, ext: str, theme: str = "handmade") -> str:
 
 
 def create(
-    _input: str, _output: str, themes: str, formats: str, overwrite: bool, use_name: bool, phone: str, email: str
+    _input: str,
+    _output: str,
+    themes: str,
+    formats: str,
+    overwrite: bool,
+    use_name: bool,
+    phone: str,
+    email: str,
 ) -> None:
     _input = pathlib.Path(_input).absolute()
 
@@ -87,7 +96,9 @@ def create(
         for ext in formats:
             page = render(data=data, ext=ext, theme=theme)
 
-            if (_output := pathlib.Path(theme_dir, f"{output_name}.{ext}")).exists and not overwrite:
+            if (
+                _output := pathlib.Path(theme_dir, f"{output_name}.{ext}")
+            ).exists and not overwrite:
                 _overwrite_file = input(f"{_output} exists. Overwrite? (y/N) ").lower() == "y"
 
             else:
@@ -118,12 +129,24 @@ def create(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate resume in various formats from a single json input")
-    parser.add_argument(
-        "--input", required=False, metavar="INPUT", type=str, help="an input file [resume.json]", default="resume.json"
+    parser = argparse.ArgumentParser(
+        description="Generate resume in various formats from a single json input"
     )
     parser.add_argument(
-        "--output", required=False, metavar="OUTPUT", type=str, help="an output directory [./out/]", default="./out/"
+        "--input",
+        required=False,
+        metavar="INPUT",
+        type=str,
+        help="an input file [resume.json]",
+        default="resume.json",
+    )
+    parser.add_argument(
+        "--output",
+        required=False,
+        metavar="OUTPUT",
+        type=str,
+        help="an output directory [./out/]",
+        default="./out/",
     )
     parser.add_argument(
         "--themes",
@@ -142,7 +165,11 @@ if __name__ == "__main__":
         default="pdf,html,txt",
     )
     parser.add_argument(
-        "--overwrite", required=False, action="store_true", help="overwrite existing files [False]", default=False
+        "--overwrite",
+        required=False,
+        action="store_true",
+        help="overwrite existing files [False]",
+        default=False,
     )
     parser.add_argument(
         "--use-name-in-files",
