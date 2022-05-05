@@ -2,11 +2,12 @@ import os
 import sys
 import json
 import pathlib
-import argparse
-import subprocess
+import tempfile
 
 import arrow
+import typer
 from jinja2 import Template
+from playwright.sync_api import sync_playwright
 
 SUPPORTED_FORMATS = {"html", "pdf", "txt"}
 SUPPORTED_THEMES = {"handmade"}
@@ -16,6 +17,7 @@ def format_data(data: dict, phone: str, email: str) -> dict:
     # Fix Profiles
     profiles: dict = {i["network"].lower(): i for i in data["basics"]["profiles"]}
     data["basics"]["profiles"] = profiles
+    phone = phone.replace("-", "")
 
     data["basics"]["phone"] = f"({phone[:3]}) {phone[3:6]} - {phone[6:]}"
     data["basics"]["email"] = email
@@ -37,46 +39,39 @@ def format_data(data: dict, phone: str, email: str) -> dict:
 
 
 def render(data: dict, ext: str, theme: str = "handmade") -> str:
-    if ext in ("html", "pdf"):
-        path = pathlib.Path(os.getcwd(), theme, "template.html").absolute()
+    if ext == "pdf":
+        ext = "html"
 
-    elif ext == "txt":
-        path = pathlib.Path(os.getcwd(), theme, "template.txt").absolute()
+    path = pathlib.Path(theme, f"template.{ext}.j2").absolute()
+    template = Template(path.read_text())
 
-    with open(path, "r") as template_file:
-        template = Template(template_file.read())
-
-    output = template.render({"data": data, "ext": ext})
-
-    return output
+    return template.render({"data": data, "ext": ext})
 
 
-def create(
-    _input: str,
-    _output: str,
-    themes: str,
-    formats: str,
-    overwrite: bool,
-    use_name: bool,
-    phone: str,
-    email: str,
+def main(
+    input: pathlib.Path = typer.Argument(pathlib.Path("resume.json"), help="an input file"),
+    output: pathlib.Path = typer.Argument(pathlib.Path("./out/"), help="an output directory"),
+    themes: list[str] = typer.Option(["handmade"], help="a list of themes to apply"),
+    formats: list[str] = typer.Option(
+        ["html", "pdf", "txt"], help="a list of file formats to generate"
+    ),
+    overwrite: bool = typer.Option(False, help="overwrite existing files without asking"),
+    use_name: bool = typer.Option(True, help="save files named as the name in the resume data"),
+    phone: str = typer.Option("555-555-5555", help="your phone number"),
+    email: str = typer.Option(
+        "user@email.whom", help="an email address to add to the top of the page"
+    ),
 ) -> None:
-    _input = pathlib.Path(_input).absolute()
-
-    if _input.suffix.lower() != ".json":
+    if input.suffix.lower() != ".json":
         sys.exit("Input file must be a .json file")
 
-    formats = set(formats.split(","))
-
-    if not formats.issubset(SUPPORTED_FORMATS):
+    if not set(formats).issubset(SUPPORTED_FORMATS):
         sys.exit(f"Output formats can only be: {', '.join(SUPPORTED_FORMATS)}")
 
-    themes = set(themes.split(","))
-
-    if not themes.issubset(SUPPORTED_THEMES):
+    if not set(themes).issubset(SUPPORTED_THEMES):
         sys.exit(f"Theme can only be one of: {', '.join(SUPPORTED_THEMES)}")
 
-    with open(_input, "r") as json_file:
+    with open(input, "r") as json_file:
         data = json.load(fp=json_file)
 
     data = format_data(data=data, phone=phone, email=email)
@@ -85,128 +80,31 @@ def create(
         output_name = data["basics"]["name"]
 
     else:
-        output_name = _input.stem
+        output_name = input.stem
 
     for theme in themes:
-        theme_dir = pathlib.Path(_output, theme)
-
-        if not theme_dir.exists():
-            theme_dir.mkdir(parents=True, exist_ok=True)
+        theme_dir = pathlib.Path(output, theme)
+        theme_dir.mkdir(parents=True, exist_ok=True)
 
         for ext in formats:
-            page = render(data=data, ext=ext, theme=theme)
+            document = render(data=data, ext=ext, theme=theme)
+            output_file = pathlib.Path(theme_dir, output_name).with_suffix(f".{ext}")
 
-            if (
-                _output := pathlib.Path(theme_dir, f"{output_name}.{ext}")
-            ).exists and not overwrite:
-                _overwrite_file = input(f"{_output} exists. Overwrite? (y/N) ").lower() == "y"
-
-            else:
-                _overwrite_file = True
-
-            if type(page) == str and (_overwrite_file or overwrite):
-                with open(_output, "w") as file:
-                    file.write(page)
-
+            if not output_file.exists() or (output_file.exists() and overwrite):
                 if ext == "pdf":
-                    subprocess.run(["mv", _output, pathlib.Path(_output.parent, "pdf.html")])
-                    subprocess.run(
-                        [
-                            "wkhtmltopdf",
-                            "--page-size",
-                            "Letter",
-                            "page",
-                            pathlib.Path(_output.parent, "pdf.html"),
-                            "--viewport-size",
-                            "1920x1080",
-                            "--enable-local-file-access",
-                            "--print-media-type",
-                            _output,
-                        ],
-                        capture_output=True,
-                    )
-                    subprocess.run(["rm", pathlib.Path(_output.parent, "pdf.html")])
+                    with tempfile.NamedTemporaryFile(mode="w", suffix=".html") as pdf_loader:
+                        pdf_loader.write(document)
+                        pdf_loader.seek(0)
+
+                        with sync_playwright() as playwright:
+                            browser = playwright.chromium.launch()
+                            page = browser.new_page(viewport={"width": 1920, "height": 1080})
+                            page.goto(f"file://{pdf_loader.name}")
+                            page.pdf(path=output_file)
+
+                else:
+                    output_file.write_text(document)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate resume in various formats from a single json input"
-    )
-    parser.add_argument(
-        "--input",
-        required=False,
-        metavar="INPUT",
-        type=str,
-        help="an input file [resume.json]",
-        default="resume.json",
-    )
-    parser.add_argument(
-        "--output",
-        required=False,
-        metavar="OUTPUT",
-        type=str,
-        help="an output directory [./out/]",
-        default="./out/",
-    )
-    parser.add_argument(
-        "--themes",
-        required=False,
-        metavar="THEMES",
-        type=str,
-        help="a comma-separated list of themes to apply [handmade]",
-        default="handmade",
-    )
-    parser.add_argument(
-        "--formats",
-        required=False,
-        metavar="FORMATS",
-        type=str,
-        help="a comma-separated list of file formats to generate [pdf,html,txt]",
-        default="pdf,html,txt",
-    )
-    parser.add_argument(
-        "--overwrite",
-        required=False,
-        action="store_true",
-        help="overwrite existing files [False]",
-        default=False,
-    )
-    parser.add_argument(
-        "--use-name-in-files",
-        dest="use_name",
-        required=False,
-        action="store_true",
-        help="save files as the name in the resume [False]",
-        default=False,
-    )
-
-    parser.add_argument(
-        "--phone",
-        required=False,
-        metavar="PHONE",
-        type=str,
-        help="the phone number to add to the top of the page",
-        default="5555555555",
-    )
-
-    parser.add_argument(
-        "--email",
-        required=False,
-        metavar="EMAIL",
-        type=str,
-        help="the email address to add to the top of the page",
-        default="user@email.whom",
-    )
-
-    args = parser.parse_args()
-
-    create(
-        _input=args.input,
-        _output=args.output,
-        themes=args.themes,
-        formats=args.formats,
-        overwrite=args.overwrite,
-        use_name=args.use_name,
-        phone=args.phone,
-        email=args.email,
-    )
+    typer.run(main)
