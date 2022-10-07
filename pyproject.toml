@@ -24,12 +24,13 @@ Jinja2 = "^3.1.2"
 typer = "^0.4.1"
 playwright = "^1.21.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 ipython = "^8.3.0"
 pre-commit = "^2.18.1"
 mypy = "^0.950"
 pylint = "^2.13.8"
 nest-asyncio = "^1.5.5"
+pudb = "^2022.1.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
