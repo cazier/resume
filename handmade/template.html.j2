@@ -166,12 +166,28 @@
             padding-left: 8px;
         }
 
-        ul.highlights li::before {
+        ul.highlights li.highlights::before {
             content: "►";
             color: #820d22;
             width: 8px;
             text-indent: -8px;
             margin-left: -8px;
+            display: inline-block;
+        }
+
+        ul.lowlights {
+            padding: 0.5em 0 0 0;
+            list-style-type: none;
+            margin-bottom: 4px;
+            columns: 2;
+        }
+
+        ul.lowlights li.lowlights::before {
+            content: "•";
+            color: #2C85B1;
+            width: 4px;
+            text-indent: -6px;
+            margin-left: -4px;
             display: inline-block;
         }
 
@@ -338,7 +354,16 @@
                     </div>
                     <ul class="highlights">
                         {% for highlight in item["highlights"] %}
-                        <li>{{ highlight }}</li>
+                        <li class="highlights">{{ highlight["base"] }}</li>
+                            {% if highlight["lowlights"] %}
+                                <li>
+                                    <ul class="lowlights">
+                                        {% for row in highlight["lowlights"] %}
+                                            <li class="lowlights">{{ row }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -365,7 +390,16 @@
                     </div>
                     <ul class="highlights">
                         {% for highlight in item["highlights"] %}
-                        <li>{{ highlight }}</li>
+                        <li class="highlights">{{ highlight["base"] }}</li>
+                            {% if highlight["lowlights"] %}
+                                <li>
+                                    <ul class="lowlights">
+                                        {% for row in highlight["lowlights"] %}
+                                            <li class="lowlights">{{ row }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
