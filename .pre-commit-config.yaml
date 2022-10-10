@@ -20,4 +20,4 @@ repos:
     hooks:
       - id: check-jsonschema
         files: (?:^resume.json$|^dated/$)
-        args: ["--schemafile", "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json"]
+        args: ["--schemafile", "https://raw.githubusercontent.com/cazier/resume-schema/master/schema.json"]
