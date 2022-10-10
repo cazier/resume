@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ data.Basics.Name }}</title>
+
+    <meta name="description" content="My Resume - {{ data.Basics.Name }}">
+    <meta name="author" content="{{ data.Basics.Name }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css' />
+
+    <script src="https://kit.fontawesome.com/8e67a10275.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            background: #fff;
+            font: 14px 'Open Sans', Helvetica, Arial, sans-serif;
+            line-height: 1.4;
+            margin: 0;
+            margin-bottom: 100px;
+        }
+
+        div.abstract {
+            line-height: 1.6;
+            font-size: 90%;
+            text-align: justify;
+            padding: 6px 0 6px;
+        }
+
+        div.summary {
+            font-size: 90%;
+        }
+
+        a {
+            color: #2C85B1;
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        section h2 {
+            margin: 0;
+            padding: 6px 0 4px 0;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 1.4em;
+            color: #820d22;
+        }
+
+        section.section {
+            margin-left: 8px;
+        }
+
+        section.section * {
+            padding: 0;
+        }
+
+        table.works {
+            vertical-align: middle;
+            margin-bottom: 6px;
+        }
+
+        table.works tbody tr td:first-of-type {
+            text-align: center;
+        }
+
+        table.works tbody tr td:last-of-type {
+            text-align: right;
+            padding-right: 0;
+        }
+
+        th.company {
+            text-transform: uppercase;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: left;
+            padding-left: 0;
+        }
+
+        td.dates, div.fluency, span.pronouns {
+            color: #6B6B6B;
+        }
+
+        .heading header .contact .detail {
+            margin: 0 1em 0 0;
+            white-space: nowrap;
+        }
+
+        .contact.row {
+            margin-left: -6px;
+            flex-wrap: nowrap;
+        }
+
+        div.contact.row span:nth-child(n+4) {
+            text-align: right;
+            margin: 0 0 0 12px;
+        }
+
+        div.contact.row span:nth-child(3) {
+            text-align: center;
+            margin: 0;
+        }
+
+        div.contact.row span a {
+            vertical-align: bottom;
+        }
+
+        a.gh::before {
+            font-family: "Font Awesome 5 Brands";
+            font-weight: 400;
+            font-size: 14px;
+            text-rendering: auto;
+            -moz-osx-font-smoothing: grayscale;
+            content: "\f09b\00a0";
+        }
+
+        a.external::before {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            font-size: 14px;
+            text-rendering: auto;
+            -moz-osx-font-smoothing: grayscale;
+            content: "\f35d\00a0";
+        }
+
+        a.li::before {
+            font-family: "Font Awesome 5 Brands";
+            font-weight: 400;
+            font-size: 14px;
+            text-rendering: auto;
+            -moz-osx-font-smoothing: grayscale;
+            content: "\f08c\00a0";
+        }
+
+        .heading header .contact .detail a.tel {
+            color: #000000;
+        }
+
+        #resume {
+            margin: 2em 2em 2em 2.5em;
+            max-width: 768px;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            margin: 0 1em 0 0;
+            vertical-align: top;
+        }
+
+        ul.highlights {
+            padding: 0.5em 0 0 0.5em;
+            font-size: 90%;
+            list-style-type: none;
+            margin-bottom: 4px;
+        }
+
+        ul.highlights li {
+            padding-left: 8px;
+        }
+
+        ul.highlights li.highlights::before {
+            content: "►";
+            color: #820d22;
+            width: 8px;
+            text-indent: -8px;
+            margin-left: -8px;
+            display: inline-block;
+        }
+
+        ul.lowlights {
+            padding: 0.5em 0 0 0;
+            list-style-type: none;
+            margin-bottom: 4px;
+            column-count: 2;
+        }
+
+        ul.lowlights li.lowlights {
+            break-inside: avoid;
+        }
+
+        ul.lowlights li.lowlights::before {
+            content: "•";
+            color: #2C85B1;
+            width: 4px;
+            text-indent: -6px;
+            margin-left: -4px;
+            display: inline-block;
+        }
+
+        div.languages.column {
+            float: left;
+            width: 25%;
+        }
+
+        section.languages.row {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        table.table.skills tbody tr:last-child {
+            border-bottom: 0 none transparent;
+        }
+
+        table.table.skills tbody tr th {
+            text-transform: uppercase;
+            padding-left: 0;
+        }
+
+        table.table.skills {
+            margin: 0;
+        }
+
+        table.table.left * {
+            border-bottom: 0 none transparent;
+            border-left: 1px solid rgb(222, 226, 230);
+            width: 25%;
+            padding-left: 8px;
+        }
+
+        div.col.detail::before {
+            content: "\2503 ";
+            color: #6B6B6B;
+        }
+
+        @media print {
+            {% if ext != "pdf" %}
+            body {
+                font-size: 12px;
+            }
+
+            #resume {
+                margin: 1em auto auto auto;
+            }
+
+            {% else %}
+
+            #resume {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            {% endif %}
+
+            div.abstract {
+                padding: 6px 0 0;
+            }
+
+            section h2 {
+                padding: 6px 0 0;
+            }
+
+            {% if "github" in data.Basics.Profiles %}
+            a.gh::after {
+                content: ": /{{ data.Basics.Profiles.github.Username }}"
+            }{% endif %}
+
+            {% if "linkedin" in data.Basics.Profiles %}
+            a.li::after {
+                content: ": /{{ data.Basics.Profiles.linkedin.Username }}"
+            }{% endif %}
+
+            table.table {
+                margin: 0;
+            }
+
+            .works * a.gh::after {
+                content: ": {{ data.Projects.0.Links.github }}"
+            }
+
+            #projects section.section table.table.works tbody tr td.detail.col a:not(:first-child) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="resume" class="container-fluid">
+        <section class="heading">
+            <header>
+                <h1>{{ data.Basics.Name }}</h1>
+                <div class="contact row">
+                    {% if "Pronouns" in data.Basics %}
+                    <span class="detail col pronouns">
+                        {{ data.Basics.Pronouns }}
+                    </span>
+                    {% endif %}
+                    {% if "Phone" in data.Basics %}
+                    <span class="detail col">
+                        <a class="tel" href="tel://{{ data.Basics.Phone }}">{{ data.Basics.Phone }}</a>
+                    </span>
+                    {% endif %}
+                    {% if "Email" in data.Basics %}
+                    <span class="detail col">
+                        <a href="mailto://{{ data.Basics.Email }}">{{ data.Basics.Email }}</a>
+                    </span>
+                    {% endif %}
+                    {% if "Website" in data.Basics %}
+                    <span class="detail col">
+                        <a class="external" href="{{ data.Basics.Website }}">{{ data.Basics.Website }}</a>
+                    </span>
+                    {% endif %}
+                    {% if "github" in data.Basics.Profiles %}
+                    <span class="detail col">
+                        <a class="gh" href="{{ data.Basics.Profiles.github.Url }}">Github</a>
+                    </span>
+                    {% endif %}
+                    {% if "linkedin" in data.Basics.Profiles %}
+                    <span class="detail col">
+                        <a class="li" href="{{ data.Basics.Profiles.linkedin.Url }}">LinkedIn</a>
+                    </span>
+                    {% endif %}
+                </div>
+            </header>
+            {% if "Summary" in data.Basics %}
+            <div class="abstract">
+                {{ data.Basics.Summary }}
+            </div>
+            {% endif %}
+        </section>
+        {% if "Skills" in data %}
+        <section id="skills">
+            <h2>skills</h2>
+            <section class="section">
+                <table class="table skills">
+                    <tbody>
+                        {% for skill in data.Skills %}
+                        <tr>
+                            <th scope="row">{{ skill.Name }}</th>
+                            <td>{{ funcs.join(skill.Keywords, ", ") }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </section>
+        {% endif %}
+        {% if "Projects" in data %}
+        <section id="projects">
+            <h2>Projects</h2>
+            <section class="section">
+                {% for item in data.Projects %}
+                <div class="item">
+                    <table class="table works">
+                        <tbody>
+                            <tr>
+                                <th class="company" scope="row">{{ item.Name }}</th>
+                                <td>{{ funcs.join(item.Keywords, " + ") }}</td>
+                                <td class="detail col">
+                                    {% if "github" in item.Links %}
+                                    <a class="gh" href="{{ item.Links.github }}">Github</a>
+                                    <a> | </a>
+                                    {% endif %}
+                                    {% if "external" in item.Links %}
+                                    <a class="external" href="{{ item.Links.external }}">Link</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="summary">
+                        {{ item.Description }}
+                    </div>
+                    <ul class="highlights">
+                        {% for highlight in item.Highlights %}
+                        <li class="highlights">{{ highlight.Base }}</li>
+                            {% if highlight.Lowlights %}
+                                <li>
+                                    <ul class="lowlights">
+                                        {% for row in highlight.Lowlights %}
+                                            <li class="lowlights">{{ row }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+        </section>
+        {% if "Work" in data %}
+        <section id="experience">
+            <h2>Work History</h2>
+            <section class="section">
+                {% for item in funcs.sort(data.Work, true) %}
+                <div class="item">
+                    <table class="table works">
+                        <tbody>
+                            <tr>
+                                <th class="company" scope="row">{{  item.Company }}</th>
+                                <td>{{ item.Position }}</td>
+                                <td class="dates">{{ funcs.date(item.StartDate) }} - {% if EndDate in item %}{{ funcs(item.EndDate) }}{% else %}Present{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="summary">{{ item.Summary }}
+                    </div>
+                    <ul class="highlights">
+                        {% for highlight in item.Highlights %}
+                        <li class="highlights">{{ highlight.Base }}</li>
+                            {% if highlight.Lowlights %}
+                                <li>
+                                    <ul class="lowlights">
+                                        {% for row in highlight.Lowlights %}
+                                            <li class="lowlights">{{ row }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </section>
+        </section>
+        {% endif %}
+        {% if "Education" in data %}
+        <section id="education">
+            <h2>education</h2>
+            {% for item in data.Education %}
+            <section class="section">
+                <table class="table works">
+                    <tbody>
+                        <tr>
+                            <th class="school" scope="row">{{ item.Institution }}</th>
+                            <td>{{ item.StudyType }} {{ item.Area }}</td>
+                            <td class="dates">{{ funcs.date(item.StartDate) }} - {% if EndDate in item %}{{ funcs(item.EndDate) }}{% else %}Present{% endif %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            {% endfor %}
+        </section>
+        {% endif %}
+        <section id="languages">
+            <h2>Languages</h2>
+            <section class="section container">
+                <div class="row">
+                {% for language in data.Languages %}
+                    <div class="col">
+                        <div class="left">
+                            {{ language.Language }}
+                        </div>
+                        <div class="fluency">
+                            &nbsp;{{ language.Fluency }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+        </section>
+        {% comment %} {% if "Languages" in data %}
+        <section id="languages">
+            <h2>Languages</h2>
+            <section class="section">
+                <table class="table languages left">
+                    <thead>
+                        <tr>
+                            {% for language in data["zipLanguages"][0] %}
+                            <th scope="col">{{ language }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% for language in data["zipLanguages"][1] %}
+                            <td>{{ language }}</td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+        {% endif %} {% endcomment %}
+        {% if "Interests" in data %}
+        <section id="interests">
+            <h2>Interests</h2>
+            <section class="section container">
+                <div class="row">
+                {% for interest in data.Interests %}
+                    <div class="col detail">
+                        {{ interest.Name }}
+                    </div>
+                {% endfor %}
+            </section>
+            {% comment %} <section class="section">
+                <table class="table interests left">
+                    <thead>
+                        <tr>
+                            {% for interest in data.Interests %}
+                            <th scope="col">{{ interest.Name }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                </table>
+            </section> {% endcomment %}
+        </section>
+        {% endif %}
+    </div>
+</body>
+
+</html>

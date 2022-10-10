@@ -1,0 +1,48 @@
+{{ data.Basics.Name }}
+Email: {{ data.Basics.Email }}
+Tel: {{ data.Basics.Phone }}
+{% if "Website" in data.Basics %}Web: {{ data.Basics.Website }}{% endif -%}
+GitHub: {{ data.Basics.Profiles.github.Url }}
+LinkedIn: {{ data.Basics.Profiles.linkedin.Url }}
+
+================================================================================
+
+{{ data.Basics.Summary }}
+
+
+SKILLS -------------------------------------------------------------------------
+{% for skill in data.Skills %}
+- {{ skill.Name }}: {{ funcs.join(skill.Keywords, ", ") }}{% endfor %}
+
+
+PROJECTS -----------------------------------------------------------------------
+{% for project in data.Projects %}
+- {{ project.Name }} -- {{ funcs.join(project.Keywords, " + ") }}
+  {{ project.Links.github }} |  {{ project.Links.external }}
+  {{ project.Description }}{% for highlight in project.Highlights %}
+  - {{ highlight.Base }}{% for lowlight in highlight.Lowlights %}
+    - {{ lowlight }}{% endfor %}{% endfor %}
+{% endfor %}
+
+WORK HISTORY -------------------------------------------------------------------
+{% for work in data.Work %}
+- {{ work.Company }} -- {{ work.Position }} --{{ funcs.date(work.StartDate) }}  - {% if "endDate" in work %}{{ funcs.date(work.EndDate) }} {% else %}Present{% endif %}
+  {{ work.Summary }}{% for highlight in work.Highlights %}
+  - {{ highlight.Base }}{% for lowlight in highlight.Lowlights %}
+    - {{ lowlight }}{% endfor %}{% endfor %}
+{% endfor %}
+
+EDUCATION ----------------------------------------------------------------------
+
+{% for education in data.Education %}- {{ education.Institution }} -- {{ education.Studytype }} {{ education.Area }} -- {{ funcs.date(education.StartDate) }} - {% if "endDate" in education %}{{ funcs.date(education.EndDate) }}{% else %}Present{% endif %}
+{% endfor %}
+
+LANGUAGES ----------------------------------------------------------------------
+
+{% for language in data.Languages %}- {{ language.Language }} - {{ language.Fluency }}
+{% endfor %}
+
+INTERESTS ----------------------------------------------------------------------
+
+{% for interest in data.Interests %}- {{ interest.Name }}
+{% endfor %}

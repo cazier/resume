@@ -1,6 +1,7 @@
 package files
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -19,4 +20,10 @@ func StripExtensions(fp string) (directory, base string) {
 	file := filepath.Base(fp)
 
 	return directory, strings.Split(file, ".")[0]
+}
+
+func WithExtension(fp string, ext string) (output string) {
+	directory, file := StripExtensions(fp)
+
+	return filepath.Join(directory, fmt.Sprintf("%s.%s", file, ext))
 }

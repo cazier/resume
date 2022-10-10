@@ -1,11 +1,9 @@
 package marshall
 
 import (
-	"bytes"
-	"io"
+	"path/filepath"
 	"sort"
 	"strings"
-	"text/template"
 	"time"
 
 	shared "tool/main/shared"
@@ -13,20 +11,24 @@ import (
 	"github.com/flosch/pongo2/v6"
 )
 
-func RenderText(path string, context Resume) string {
-	template, err := template.ParseFiles(path)
+func RenderText(path string, resume Resume) string {
+	path = filepath.Join(path, "template.txt.go.j2")
+
+	tpl, err := pongo2.FromFile(path)
 	shared.HandleError(err)
 
-	var buffer bytes.Buffer
-	w := io.Writer(&buffer)
-
-	err = template.Execute(w, context)
+	render, err := tpl.Execute(pongo2.Context{
+		"data":  resume,
+		"funcs": Funcs,
+	})
 	shared.HandleError(err)
 
-	return buffer.String()
+	return render
 }
 
 func RenderHtml(path string, resume Resume) string {
+	path = filepath.Join(path, "template.html.go.j2")
+
 	tpl, err := pongo2.FromFile(path)
 	shared.HandleError(err)
 

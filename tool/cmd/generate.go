@@ -26,14 +26,28 @@ supplied resume data. The output can contain plain text (.txt) files or websites
 (.html), as well as a binary PDF document.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		resume := marshall.LoadJsonFile(input)
-		html := marshall.RenderHtml(template, resume)
 
-		if files.Exists(output) && !overwrite {
-			shared.Exit(1, "The output file exists, and the overwrite flag is not provided.")
+		for _, fmt := range format {
+			var fn func(string, marshall.Resume) string
+
+			if fmt == "html" {
+				fn = marshall.RenderHtml
+			} else if fmt == "txt" {
+				fn = marshall.RenderText
+			} else {
+				shared.Exit(1, "The only supported formats are `html` and `txt`.")
+			}
+
+			output = files.WithExtension(output, fmt)
+			out := fn(template, resume)
+
+			if files.Exists(output) && !overwrite {
+				shared.Exit(1, "The output file exists, and the overwrite flag is not provided.")
+			}
+
+			os.WriteFile(output, []byte(out), 0644)
+			// shared.Exit(0, "Saving the file to: %s", output)
 		}
-
-		os.WriteFile(output, []byte(html), 0644)
-		shared.Exit(0, "Saving the file to: %s", output)
 	},
 }
 
