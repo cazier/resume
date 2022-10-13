@@ -6,9 +6,9 @@ package cmd
 import (
 	"os"
 
-	files "tool/main/files"
-	marshall "tool/main/marshall"
-	shared "tool/main/shared"
+	files "github.com/cazier/resume/pkg/files"
+	marshall "github.com/cazier/resume/pkg/marshall"
+	shared "github.com/cazier/resume/pkg/shared"
 
 	"github.com/spf13/cobra"
 )

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	shared "tool/main/shared"
+	shared "github.com/cazier/resume/pkg/shared"
 
 	"github.com/flosch/pongo2/v6"
 )

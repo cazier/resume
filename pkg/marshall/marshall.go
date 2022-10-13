@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	shared "tool/main/shared"
+	shared "github.com/cazier/resume/pkg/shared"
 )
 
 type Resume struct {
