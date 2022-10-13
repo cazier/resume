@@ -4,7 +4,7 @@ Copyright © 2022 Brendan Cazier
 package main
 
 import (
-	"resume/main/cmd"
+	"github.com/cazier/resume/pkg/cmd"
 )
 
 func main() {
