@@ -16,12 +16,12 @@ var overwrite bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "tool",
+	Use:   "resume",
 	Short: "A resume managing tool",
-	Long:  `This encompasses encoding and decoding the resume file, as a `,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Long: `This tool is primarily intended to generate a resume file in various formats
+from a provided JSON file. Additionally, there is some support for encoding/decoding
+the JSON file (originally intended to prevent having your data scraped from a public
+git repository. See the subcommands and their help pages for more details`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
