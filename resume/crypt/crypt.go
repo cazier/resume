@@ -8,8 +8,8 @@ import (
 	"io"
 	"os"
 
-	files "tool/main/files"
-	shared "tool/main/shared"
+	files "resume/main/files"
+	shared "resume/main/shared"
 )
 
 func getGCM(key string) (output cipher.AEAD) {

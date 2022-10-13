@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	shared "tool/main/shared"
+	shared "resume/main/shared"
 )
 
 type Resume struct {

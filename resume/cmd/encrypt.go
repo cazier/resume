@@ -4,7 +4,7 @@ Copyright © 2022 Brendan Cazier
 package cmd
 
 import (
-	crypt "tool/main/crypt"
+	crypt "resume/main/crypt"
 
 	"github.com/spf13/cobra"
 )

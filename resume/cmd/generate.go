@@ -6,9 +6,9 @@ package cmd
 import (
 	"os"
 
-	files "tool/main/files"
-	marshall "tool/main/marshall"
-	shared "tool/main/shared"
+	files "resume/main/files"
+	marshall "resume/main/marshall"
+	shared "resume/main/shared"
 
 	"github.com/spf13/cobra"
 )
