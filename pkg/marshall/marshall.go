@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"strings"
+	"time"
 
 	shared "github.com/cazier/resume/pkg/shared"
 )
@@ -39,20 +40,20 @@ type Profile struct {
 }
 
 type Education struct {
-	Institution string   `json:"institution"`
-	Area        string   `json:"area"`
-	StudyType   string   `json:"studyType"`
-	StartDate   string   `json:"startDate"`
-	EndDate     string   `json:"endDate"`
-	Courses     []string `json:"courses"`
+	Institution string    `json:"institution"`
+	Area        string    `json:"area"`
+	StudyType   string    `json:"studyType"`
+	StartDate   time.Time `json:"startDate"`
+	EndDate     time.Time `json:"endDate,omitempty"`
+	Courses     []string  `json:"courses"`
 }
 
 type Work struct {
 	Company    string      `json:"company"`
 	Position   string      `json:"position"`
 	Website    string      `json:"website"`
-	StartDate  string      `json:"startDate"`
-	EndDate    string      `json:"endDate"`
+	StartDate  time.Time   `json:"startDate"`
+	EndDate    time.Time   `json:"endDate,omitempty"`
 	Summary    string      `json:"summary"`
 	Highlights []Highlight `json:"highlights"`
 }
@@ -79,8 +80,8 @@ type Skill struct {
 
 type Project struct {
 	Name        string            `json:"name"`
-	StartDate   string            `json:"startDate"`
-	EndDate     string            `json:"endDate"`
+	StartDate   time.Time         `json:"startDate"`
+	EndDate     time.Time         `json:"endDate,omitempty"`
 	Links       map[string]string `json:"links"`
 	Keywords    []string          `json:"keywords"`
 	Description string            `json:"description"`
