@@ -335,11 +335,47 @@
                         {% for skill in data.Skills %}
                         <tr>
                             <th scope="row">{{ skill.Name }}</th>
-                            <td>{{ funcs.join(skill.Keywords, ", ") }}</td>
+                            <td>{{ funcs.join(skill.Keywords, " | ") }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </section>
+        </section>
+        {% endif %}
+        {% if "Work" in data %}
+        <section id="experience">
+            <h2>Work History</h2>
+            <section class="section">
+                {% for item in funcs.sort(data.Work, true) %}
+                <div class="item">
+                    <table class="table works">
+                        <tbody>
+                            <tr>
+                                <th class="company" scope="row">{{  item.Company }}</th>
+                                <td>{{ item.Position }}</td>
+                                <td class="dates">{{ funcs.date(item.StartDate) }} - {% if item.EndDate != "" %}{{ funcs.date(item.EndDate) }}{% else %}Present{% endif %}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="summary">{{ item.Summary }}
+                    </div>
+                    <ul class="highlights">
+                        {% for highlight in item.Highlights %}
+                        <li class="highlights">{{ highlight.Base }}</li>
+                            {% if highlight.Lowlights %}
+                                <li>
+                                    <ul class="lowlights">
+                                        {% for row in highlight.Lowlights %}
+                                            <li class="lowlights">{{ row }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
             </section>
         </section>
         {% endif %}
@@ -386,42 +422,6 @@
                 </div>
                 {% endfor %}
             </section>
-        {% endif %}
-        </section>
-        {% if "Work" in data %}
-        <section id="experience">
-            <h2>Work History</h2>
-            <section class="section">
-                {% for item in funcs.sort(data.Work, true) %}
-                <div class="item">
-                    <table class="table works">
-                        <tbody>
-                            <tr>
-                                <th class="company" scope="row">{{  item.Company }}</th>
-                                <td>{{ item.Position }}</td>
-                                <td class="dates">{{ funcs.date(item.StartDate) }} - {% if EndDate in item %}{{ funcs(item.EndDate) }}{% else %}Present{% endif %}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="summary">{{ item.Summary }}
-                    </div>
-                    <ul class="highlights">
-                        {% for highlight in item.Highlights %}
-                        <li class="highlights">{{ highlight.Base }}</li>
-                            {% if highlight.Lowlights %}
-                                <li>
-                                    <ul class="lowlights">
-                                        {% for row in highlight.Lowlights %}
-                                            <li class="lowlights">{{ row }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endfor %}
-            </section>
         </section>
         {% endif %}
         {% if "Education" in data %}
@@ -434,7 +434,7 @@
                         <tr>
                             <th class="school" scope="row">{{ item.Institution }}</th>
                             <td>{{ item.StudyType }} {{ item.Area }}</td>
-                            <td class="dates">{{ funcs.date(item.StartDate) }} - {% if EndDate in item %}{{ funcs(item.EndDate) }}{% else %}Present{% endif %}</td>
+                            <td class="dates">{{ funcs.date(item.StartDate) }} - {% if item.EndDate != "" %}{{ funcs.date(item.EndDate) }}{% else %}Present{% endif %}</td>
                         </tr>
                     </tbody>
                 </table>
