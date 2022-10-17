@@ -231,23 +231,10 @@
         }
 
         @media print {
-            {% if ext != "pdf" %}
-            body {
-                font-size: 12px;
-            }
-
-            #resume {
-                margin: 1em auto auto auto;
-            }
-
-            {% else %}
-
             #resume {
                 margin-left: auto;
                 margin-right: auto;
             }
-
-            {% endif %}
 
             div.abstract {
                 padding: 6px 0 0;
