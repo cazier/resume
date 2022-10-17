@@ -1,4 +1,4 @@
-{{ data.Basics.Name }}
+{{ data.Basics.Name }} {% if "Pronouns" in data.Basics %}({{ data.Basics.Pronouns }}){% endif %}
 Email: {{ data.Basics.Email }}
 Tel: {{ data.Basics.Phone }}
 {% if "Website" in data.Basics %}Web: {{ data.Basics.Website }}{% endif -%}
@@ -17,8 +17,8 @@ SKILLS -------------------------------------------------------------------------
 
 PROJECTS -----------------------------------------------------------------------
 {% for project in data.Projects %}
-- {{ project.Name }} -- {{ funcs.join(project.Keywords, " + ") }}
-  {{ project.Links.github }} |  {{ project.Links.external }}
+- {{ project.Name }} | {{ funcs.join(project.Keywords, " + ") }}
+  {{ project.Links.github }} | {{ project.Links.external }}
   {{ project.Description }}{% for highlight in project.Highlights %}
   - {{ highlight.Base }}{% for lowlight in highlight.Lowlights %}
     - {{ lowlight }}{% endfor %}{% endfor %}
