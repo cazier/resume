@@ -40,22 +40,26 @@ type Profile struct {
 }
 
 type Education struct {
-	Institution string    `json:"institution"`
-	Area        string    `json:"area"`
-	StudyType   string    `json:"studyType"`
-	StartDate   time.Time `json:"startDate"`
-	EndDate     time.Time `json:"endDate,omitempty"`
-	Courses     []string  `json:"courses"`
+	Institution   string    `json:"institution"`
+	Area          string    `json:"area"`
+	StudyType     string    `json:"studyType"`
+	StartDate     time.Time `json:"-"`
+	JsonStartDate string    `json:"startDate"`
+	EndDate       time.Time `json:"-"`
+	JsonEndDate   string    `json:"endDate,omitempty"`
+	Courses       []string  `json:"courses"`
 }
 
 type Work struct {
-	Company    string      `json:"company"`
-	Position   string      `json:"position"`
-	Website    string      `json:"website"`
-	StartDate  time.Time   `json:"startDate"`
-	EndDate    time.Time   `json:"endDate,omitempty"`
-	Summary    string      `json:"summary"`
-	Highlights []Highlight `json:"highlights"`
+	Company       string      `json:"company"`
+	Position      string      `json:"position"`
+	Website       string      `json:"website"`
+	StartDate     time.Time   `json:"-"`
+	JsonStartDate string      `json:"startDate"`
+	EndDate       time.Time   `json:"-"`
+	JsonEndDate   string      `json:"endDate,omitempty"`
+	Summary       string      `json:"summary"`
+	Highlights    []Highlight `json:"highlights"`
 }
 
 type Highlight struct {
@@ -79,13 +83,15 @@ type Skill struct {
 }
 
 type Project struct {
-	Name        string            `json:"name"`
-	StartDate   time.Time         `json:"startDate"`
-	EndDate     time.Time         `json:"endDate,omitempty"`
-	Links       map[string]string `json:"links"`
-	Keywords    []string          `json:"keywords"`
-	Description string            `json:"description"`
-	Highlights  []Highlight       `json:"highlights"`
+	Name          string            `json:"name"`
+	StartDate     time.Time         `json:"-"`
+	JsonStartDate string            `json:"startDate"`
+	EndDate       time.Time         `json:"-"`
+	JsonEndDate   string            `json:"endDate,omitempty"`
+	Links         map[string]string `json:"links"`
+	Keywords      []string          `json:"keywords"`
+	Description   string            `json:"description"`
+	Highlights    []Highlight       `json:"highlights"`
 }
 
 func LoadJsonFile(path string) Resume {
@@ -100,6 +106,7 @@ func LoadJsonString(data []byte) Resume {
 	json.Unmarshal(data, &output)
 
 	adaptProfiles(&output)
+	adaptDates(&output)
 
 	return output
 }
@@ -114,4 +121,33 @@ func adaptProfiles(resume *Resume) {
 		}
 		resume.Basics.Profiles[strings.ToLower(ps.Network)] = *ps
 	}
+}
+
+func adaptDates(resume *Resume) {
+	for index, education := range resume.Education {
+		resume.Education[index].StartDate = parseDate(education.JsonStartDate)
+		resume.Education[index].EndDate = parseDate(education.JsonEndDate)
+	}
+
+	for index, project := range resume.Projects {
+		resume.Projects[index].StartDate = parseDate(project.JsonStartDate)
+		resume.Projects[index].EndDate = parseDate(project.JsonEndDate)
+	}
+
+	for index, work := range resume.Work {
+		resume.Work[index].StartDate = parseDate(work.JsonStartDate)
+		resume.Work[index].EndDate = parseDate(work.JsonEndDate)
+	}
+}
+
+func parseDate(date string) time.Time {
+	if date == "" {
+		return time.Time{}
+	}
+	t, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		t, err = time.Parse("2006-01", date)
+		shared.HandleError(err)
+	}
+	return t
 }

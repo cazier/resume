@@ -25,16 +25,16 @@ PROJECTS -----------------------------------------------------------------------
 {% endfor %}
 
 WORK HISTORY -------------------------------------------------------------------
-{% for work in data.Work %}
-- {{ work.Company }} -- {{ work.Position }} --{{ funcs.date(work.StartDate) }}  - {% if "endDate" in work %}{{ funcs.date(work.EndDate) }} {% else %}Present{% endif %}
-  {{ work.Summary }}{% for highlight in work.Highlights %}
+{% for item in data.Work %}
+- {{ item.Company }} | {{ item.Position }} | {{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}
+  {{ item.Summary }}{% for highlight in item.Highlights %}
   - {{ highlight.Base }}{% for lowlight in highlight.Lowlights %}
     - {{ lowlight }}{% endfor %}{% endfor %}
 {% endfor %}
 
 EDUCATION ----------------------------------------------------------------------
 
-{% for education in data.Education %}- {{ education.Institution }} -- {{ education.Studytype }} {{ education.Area }} -- {{ funcs.date(education.StartDate) }} - {% if "endDate" in education %}{{ funcs.date(education.EndDate) }}{% else %}Present{% endif %}
+{% for item in data.Education %}- {{ item.Institution }} | {{ item.StudyType }}, {{ item.Area }} | {{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}
 {% endfor %}
 
 LANGUAGES ----------------------------------------------------------------------

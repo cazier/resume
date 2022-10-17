@@ -354,7 +354,7 @@
                             <tr>
                                 <th class="company" scope="row">{{  item.Company }}</th>
                                 <td>{{ item.Position }}</td>
-                                <td class="dates">{{ funcs.date(item.StartDate) }} - {% if item.EndDate != "" %}{{ funcs.date(item.EndDate) }}{% else %}Present{% endif %}</td>
+                                <td class="dates">{{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -434,7 +434,7 @@
                         <tr>
                             <th class="school" scope="row">{{ item.Institution }}</th>
                             <td>{{ item.StudyType }} {{ item.Area }}</td>
-                            <td class="dates">{{ funcs.date(item.StartDate) }} - {% if item.EndDate != "" %}{{ funcs.date(item.EndDate) }}{% else %}Present{% endif %}</td>
+                            <td class="dates">{{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}</td>
                         </tr>
                     </tbody>
                 </table>
