@@ -433,29 +433,6 @@
                 {% endfor %}
             </section>
         </section>
-        {% comment %} {% if "Languages" in data %}
-        <section id="languages">
-            <h2>Languages</h2>
-            <section class="section">
-                <table class="table languages left">
-                    <thead>
-                        <tr>
-                            {% for language in data["zipLanguages"][0] %}
-                            <th scope="col">{{ language }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {% for language in data["zipLanguages"][1] %}
-                            <td>{{ language }}</td>
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </section>
-        {% endif %} {% endcomment %}
         {% if "Interests" in data %}
         <section id="interests">
             <h2>Interests</h2>

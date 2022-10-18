@@ -1,40 +1,30 @@
 package marshall
 
 import (
-	"path/filepath"
 	"sort"
 	"strings"
 	"time"
 
 	shared "github.com/cazier/resume/pkg/shared"
+	themes "github.com/cazier/resume/pkg/themes"
 
 	"github.com/flosch/pongo2/v6"
 )
 
-func RenderText(path string, resume Resume) string {
-	path = filepath.Join(path, "template.txt.go.j2")
-
-	tpl, err := pongo2.FromFile(path)
-	shared.HandleError(err)
-
-	render, err := tpl.Execute(pongo2.Context{
+func RenderText(theme themes.Theme, resume Resume) string {
+	render, err := theme.Txt.Execute(pongo2.Context{
 		"data":  resume,
-		"funcs": Funcs,
+		"funcs": funcs,
 	})
 	shared.HandleError(err)
 
 	return render
 }
 
-func RenderHtml(path string, resume Resume) string {
-	path = filepath.Join(path, "template.html.go.j2")
-
-	tpl, err := pongo2.FromFile(path)
-	shared.HandleError(err)
-
-	render, err := tpl.Execute(pongo2.Context{
+func RenderHtml(theme themes.Theme, resume Resume) string {
+	render, err := theme.Html.Execute(pongo2.Context{
 		"data":  resume,
-		"funcs": Funcs,
+		"funcs": funcs,
 	})
 	shared.HandleError(err)
 
@@ -52,24 +42,11 @@ func Sort(in []Work, reverse bool) []Work {
 	return out
 }
 
-func ZipLanguages(in []Language) [][]string {
-	output := make([][]string, 2)
-
-	for index := range output {
-		output[index] = make([]string, len(in))
-	}
-
-	for _, language := range in {
-		output[0] = append(output[0], language.Language)
-		output[1] = append(output[1], language.Fluency)
-	}
-
-	return output
+func Join(elements []string, with string) string {
+	return strings.Join(elements, with)
 }
 
-var Funcs map[string]any = map[string]any{
-	"join": func(elements []string, with string) string {
-		return strings.Join(elements, with)
-	},
+var funcs map[string]any = map[string]any{
+	"join": Join,
 	"sort": Sort,
 }
