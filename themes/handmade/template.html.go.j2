@@ -231,23 +231,10 @@
         }
 
         @media print {
-            {% if ext != "pdf" %}
-            body {
-                font-size: 12px;
-            }
-
-            #resume {
-                margin: 1em auto auto auto;
-            }
-
-            {% else %}
-
             #resume {
                 margin-left: auto;
                 margin-right: auto;
             }
-
-            {% endif %}
 
             div.abstract {
                 padding: 6px 0 0;
@@ -257,22 +244,8 @@
                 padding: 6px 0 0;
             }
 
-            {% if "github" in data.Basics.Profiles %}
-            a.gh::after {
-                content: ": /{{ data.Basics.Profiles.github.Username }}"
-            }{% endif %}
-
-            {% if "linkedin" in data.Basics.Profiles %}
-            a.li::after {
-                content: ": /{{ data.Basics.Profiles.linkedin.Username }}"
-            }{% endif %}
-
             table.table {
                 margin: 0;
-            }
-
-            .works * a.gh::after {
-                content: ": {{ data.Projects.0.Links.github }}"
             }
 
             #projects section.section table.table.works tbody tr td.detail.col a:not(:first-child) {
@@ -310,12 +283,12 @@
                     {% endif %}
                     {% if "github" in data.Basics.Profiles %}
                     <span class="detail col">
-                        <a class="gh" href="{{ data.Basics.Profiles.github.Url }}">Github</a>
+                        <a class="gh" href="{{ data.Basics.Profiles.github.Url }}">Github<span class="d-none d-print-inline-block">: /{{ data.Basics.Profiles.github.Username }}</span></a>
                     </span>
                     {% endif %}
                     {% if "linkedin" in data.Basics.Profiles %}
                     <span class="detail col">
-                        <a class="li" href="{{ data.Basics.Profiles.linkedin.Url }}">LinkedIn</a>
+                        <a class="li" href="{{ data.Basics.Profiles.linkedin.Url }}">LinkedIn<span class="d-none d-print-inline-block">: /{{ data.Basics.Profiles.linkedin.Username }}</span></a>
                     </span>
                     {% endif %}
                 </div>
@@ -354,7 +327,7 @@
                             <tr>
                                 <th class="company" scope="row">{{  item.Company }}</th>
                                 <td>{{ item.Position }}</td>
-                                <td class="dates">{{ funcs.date(item.StartDate) }} - {% if item.EndDate != "" %}{{ funcs.date(item.EndDate) }}{% else %}Present{% endif %}</td>
+                                <td class="dates">{{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -392,11 +365,13 @@
                                 <td>{{ funcs.join(item.Keywords, " + ") }}</td>
                                 <td class="detail col">
                                     {% if "github" in item.Links %}
-                                    <a class="gh" href="{{ item.Links.github }}">Github</a>
-                                    <a> | </a>
+                                        <a class="gh" href="{{ item.Links.github }}">Github<span class="d-none d-print-inline-block">: {{ item.Links.githubShort }}</span></a>
+                                    {% endif %}
+                                    {% if "github" in item.Links && "external" in item.Links %}
+                                        <span class="d-print-none"> | </span>
                                     {% endif %}
                                     {% if "external" in item.Links %}
-                                    <a class="external" href="{{ item.Links.external }}">Link</a>
+                                        <a class="external d-print-none" href="{{ item.Links.external }}">Link</a>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -434,7 +409,7 @@
                         <tr>
                             <th class="school" scope="row">{{ item.Institution }}</th>
                             <td>{{ item.StudyType }} {{ item.Area }}</td>
-                            <td class="dates">{{ funcs.date(item.StartDate) }} - {% if item.EndDate != "" %}{{ funcs.date(item.EndDate) }}{% else %}Present{% endif %}</td>
+                            <td class="dates">{{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}</td>
                         </tr>
                     </tbody>
                 </table>

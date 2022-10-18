@@ -41,17 +41,8 @@ func RenderHtml(path string, resume Resume) string {
 	return render
 }
 
-func parseDate(date string) time.Time {
-	t, err := time.Parse("2006-01-02", date)
-	if err != nil {
-		t, err = time.Parse("2006-01", date)
-		shared.HandleError(err)
-	}
-	return t
-}
-
 func Sort(in []Work, reverse bool) []Work {
-	parse := func(work Work) time.Time { return parseDate(work.StartDate) }
+	parse := func(work Work) time.Time { return time.Time(work.StartDate) }
 
 	out := make([]Work, len(in))
 	copy(out, in)
@@ -59,10 +50,6 @@ func Sort(in []Work, reverse bool) []Work {
 	sort.Slice(out, func(i, j int) bool { return reverse && parse(out[i]).After(parse(out[j])) })
 
 	return out
-}
-
-func DateFormat(in string) string {
-	return parseDate(in).Format("Jan 2006")
 }
 
 func ZipLanguages(in []Language) [][]string {
@@ -85,5 +72,4 @@ var Funcs map[string]any = map[string]any{
 		return strings.Join(elements, with)
 	},
 	"sort": Sort,
-	"date": DateFormat,
 }

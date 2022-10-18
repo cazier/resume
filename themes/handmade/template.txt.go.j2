@@ -1,4 +1,4 @@
-{{ data.Basics.Name }}
+{{ data.Basics.Name }} {% if "Pronouns" in data.Basics %}({{ data.Basics.Pronouns }}){% endif %}
 Email: {{ data.Basics.Email }}
 Tel: {{ data.Basics.Phone }}
 {% if "Website" in data.Basics %}Web: {{ data.Basics.Website }}{% endif -%}
@@ -17,24 +17,24 @@ SKILLS -------------------------------------------------------------------------
 
 PROJECTS -----------------------------------------------------------------------
 {% for project in data.Projects %}
-- {{ project.Name }} -- {{ funcs.join(project.Keywords, " + ") }}
-  {{ project.Links.github }} |  {{ project.Links.external }}
+- {{ project.Name }} | {{ funcs.join(project.Keywords, " + ") }}
+  {{ project.Links.github }} | {{ project.Links.external }}
   {{ project.Description }}{% for highlight in project.Highlights %}
   - {{ highlight.Base }}{% for lowlight in highlight.Lowlights %}
     - {{ lowlight }}{% endfor %}{% endfor %}
 {% endfor %}
 
 WORK HISTORY -------------------------------------------------------------------
-{% for work in data.Work %}
-- {{ work.Company }} -- {{ work.Position }} --{{ funcs.date(work.StartDate) }}  - {% if "endDate" in work %}{{ funcs.date(work.EndDate) }} {% else %}Present{% endif %}
-  {{ work.Summary }}{% for highlight in work.Highlights %}
+{% for item in data.Work %}
+- {{ item.Company }} | {{ item.Position }} | {{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}
+  {{ item.Summary }}{% for highlight in item.Highlights %}
   - {{ highlight.Base }}{% for lowlight in highlight.Lowlights %}
     - {{ lowlight }}{% endfor %}{% endfor %}
 {% endfor %}
 
 EDUCATION ----------------------------------------------------------------------
 
-{% for education in data.Education %}- {{ education.Institution }} -- {{ education.Studytype }} {{ education.Area }} -- {{ funcs.date(education.StartDate) }} - {% if "endDate" in education %}{{ funcs.date(education.EndDate) }}{% else %}Present{% endif %}
+{% for item in data.Education %}- {{ item.Institution }} | {{ item.StudyType }}, {{ item.Area }} | {{ item.StartDate | date: "Jan 2006" }} - {% if item.EndDate.IsZero() %}Present{% else %}{{ item.EndDate | date: "Jan 2006" }}{% endif %}
 {% endfor %}
 
 LANGUAGES ----------------------------------------------------------------------
