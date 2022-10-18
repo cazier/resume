@@ -58,9 +58,9 @@ func Encrypt(plaintext []byte, key string) (encrypted []byte) {
 }
 
 func Conversion(key, in, out string, overwrite bool, conv func(in []byte, key string) []byte) {
-	if !files.Exists(in) {
+	if !files.Exists(in, true) {
 		shared.Exit(1, "Could not find the input file: %s", in)
-	} else if files.Exists(out) && !overwrite {
+	} else if files.Exists(out, true) && !overwrite {
 		shared.Exit(1, "An output file exists and overwrite was not enabled: %s", out)
 	}
 

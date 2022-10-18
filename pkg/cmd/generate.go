@@ -52,8 +52,12 @@ The built-in themes include: ` + strings.Join(themes.Builtins, ", "),
 				shared.Exit(1, "The only supported formats are `html` and `txt`.")
 			}
 
+			files.MakeDirectories(output, true)
+
 			info, err := os.Stat(output)
-			shared.HandleError(err)
+			if !os.IsNotExist(err) {
+				shared.HandleError(err)
+			}
 
 			if info.IsDir() {
 				if theme.Builtin {
@@ -65,9 +69,11 @@ The built-in themes include: ` + strings.Join(themes.Builtins, ", "),
 				fout = output
 			}
 
+			files.MakeDirectories(fout, false)
+
 			gen := fn(theme, resume)
 
-			if files.Exists(fout) && !overwrite {
+			if files.Exists(fout, true) && !overwrite {
 				shared.Exit(
 					1,
 					"The output (%s) exists, and the overwrite flag is not provided.",
@@ -75,7 +81,9 @@ The built-in themes include: ` + strings.Join(themes.Builtins, ", "),
 				)
 			}
 
-			os.WriteFile(fout, []byte(gen), 0644)
+			err = os.WriteFile(fout, []byte(gen), 0644)
+			shared.HandleError(err)
+
 			fmt.Printf("Saved output to: %s\n", fout)
 		}
 	},
