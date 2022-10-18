@@ -6,6 +6,8 @@ package cmd
 import (
 	"os"
 
+	shared "github.com/cazier/resume/pkg/shared"
+
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +23,8 @@ var rootCmd = &cobra.Command{
 	Long: `This tool is primarily intended to generate a resume file in various formats
 from a provided JSON file. Additionally, there is some support for encoding/decoding
 the JSON file (originally intended to prevent having your data scraped from a public
-git repository. See the subcommands and their help pages for more details`,
+git repository. See the subcommands and their help pages for more details.`,
+	Version: shared.GetVersion(),
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
