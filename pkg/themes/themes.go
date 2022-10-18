@@ -3,6 +3,7 @@ package themes
 import (
 	"embed"
 	"errors"
+	"io"
 	iofs "io/fs"
 	"path/filepath"
 	"strings"
@@ -24,6 +25,26 @@ var Builtins []string = []string{"handmade"}
 
 //go:embed templates/*
 var fs embed.FS
+
+var templates pongo2.TemplateSet = *pongo2.NewSet("builtins", PongoTemplates{fs})
+
+type PongoTemplates struct {
+	vfs embed.FS
+}
+
+func (p PongoTemplates) Abs(base string, name string) string {
+	var abs string = name
+
+	if base != "" {
+		abs = filepath.Join(filepath.Dir(base), name)
+	}
+
+	return abs
+}
+
+func (p PongoTemplates) Get(path string) (io.Reader, error) {
+	return p.vfs.Open(path)
+}
 
 func validName(name string) (bool, []string) {
 	files, err := fs.ReadDir(filepath.Join(dir, name))
@@ -53,16 +74,11 @@ func load(name string) Theme {
 		}
 		shared.Exit(1, "The template does not have the types: %s", strings.Join(missing, ", "))
 	}
-	file, err := fs.ReadFile(filepath.Join(dir, name, "template.html.j2"))
+
+	html, err := templates.FromFile(filepath.Join(dir, name, "template.html.j2"))
 	shared.HandleError(err)
 
-	html, err := pongo2.FromBytes(file)
-	shared.HandleError(err)
-
-	file, err = fs.ReadFile(filepath.Join(dir, name, "template.txt.j2"))
-	shared.HandleError(err)
-
-	txt, err := pongo2.FromBytes(file)
+	txt, err := templates.FromFile(filepath.Join(dir, name, "template.txt.j2"))
 	shared.HandleError(err)
 
 	return Theme{html, txt, true}
