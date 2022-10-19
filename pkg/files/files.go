@@ -1,6 +1,7 @@
 package files
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -11,6 +12,8 @@ func Exists(path string, is_file bool) bool {
 	resp, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		return false
+	} else if errors.Is(err, os.ErrPermission) {
+		shared.Exit(1, "The destination path (%s) has bad permissions", path)
 	}
 	return is_file != resp.IsDir()
 }
