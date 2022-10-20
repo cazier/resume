@@ -19,7 +19,7 @@
     <style>
         body {
             background: #fff;
-            font: 14px 'Open Sans', Helvetica, Arial, sans-serif;
+            font: 14px 'Open Sans';
             line-height: 1.4;
             margin: 0;
             margin-bottom: 100px;
@@ -232,6 +232,10 @@
         }
 
         @media print {
+            body {
+                font-size: 13px;
+            }
+
             #resume {
                 margin-left: auto;
                 margin-right: auto;
@@ -434,29 +438,6 @@
                 {% endfor %}
             </section>
         </section>
-        {% comment %} {% if "Languages" in data %}
-        <section id="languages">
-            <h2>Languages</h2>
-            <section class="section">
-                <table class="table languages left">
-                    <thead>
-                        <tr>
-                            {% for language in data["zipLanguages"][0] %}
-                            <th scope="col">{{ language }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {% for language in data["zipLanguages"][1] %}
-                            <td>{{ language }}</td>
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </section>
-        {% endif %} {% endcomment %}
         {% if "Interests" in data %}
         <section id="interests">
             <h2>Interests</h2>
@@ -468,17 +449,6 @@
                     </div>
                 {% endfor %}
             </section>
-            {% comment %} <section class="section">
-                <table class="table interests left">
-                    <thead>
-                        <tr>
-                            {% for interest in data.Interests %}
-                            <th scope="col">{{ interest.Name }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                </table>
-            </section> {% endcomment %}
         </section>
         {% endif %}
     </div>

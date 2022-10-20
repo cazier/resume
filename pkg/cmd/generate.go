@@ -26,8 +26,11 @@ var generateCmd = &cobra.Command{
 	Short: "create the output resume files",
 	Long: `
 Generate the generated resume files by filling a passed in template with the supplied resume data.
-The output can contain plain text (.txt) files or websites (.html), as well as a binary PDF document
-(PENDING).
+The output can contain plain text (.txt) files or websites (.html), as well as a binary PDF
+document.
+
+NOTE: The PDF output isn't perfect. It doesn't always embed fonts, and may not match the desired
+output perfectly. It may be better to use the HTML file, and manually print that to a PDF file.
 
 If an output FILE is provided, the tool will output that exact filename, regardless of the formats 
 generated. If an output DIRECTORY is provided, the tool will output the file(s) in that directory
@@ -41,15 +44,18 @@ The built-in themes include: ` + strings.Join(themes.Builtins, ", "),
 		theme := themes.FindThemeData(template)
 
 		for _, f := range format {
-			var fn func(themes.Theme, marshall.Resume) string
+			var fn func(themes.Theme, marshall.Resume) []byte
 			var fout string
 
-			if f == "html" {
+			switch strings.ToLower(f) {
+			case "html":
 				fn = marshall.RenderHtml
-			} else if f == "txt" {
+			case "txt":
 				fn = marshall.RenderText
-			} else {
-				shared.Exit(1, "The only supported formats are `html` and `txt`.")
+			case "pdf":
+				fn = marshall.RenderPdf
+			default:
+				shared.Exit(1, "The only supported formats are `html`, `txt`, and `pdf`.")
 			}
 
 			files.MakeDirectories(output, true)
@@ -81,7 +87,7 @@ The built-in themes include: ` + strings.Join(themes.Builtins, ", "),
 				)
 			}
 
-			err = os.WriteFile(fout, []byte(gen), 0644)
+			err = os.WriteFile(fout, gen, 0644)
 			shared.HandleError(err)
 
 			fmt.Printf("Saved output to: %s\n", fout)
