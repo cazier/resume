@@ -26,8 +26,11 @@ var generateCmd = &cobra.Command{
 	Short: "create the output resume files",
 	Long: `
 Generate the generated resume files by filling a passed in template with the supplied resume data.
-The output can contain plain text (.txt) files or websites (.html), as well as a binary PDF document
-(PENDING).
+The output can contain plain text (.txt) files or websites (.html), as well as a binary PDF
+document.
+
+NOTE: The PDF output isn't perfect. It doesn't always embed fonts, and may not match the desired
+output perfectly. It may be better to use the HTML file, and manually print that to a PDF file.
 
 If an output FILE is provided, the tool will output that exact filename, regardless of the formats 
 generated. If an output DIRECTORY is provided, the tool will output the file(s) in that directory
