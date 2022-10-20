@@ -44,14 +44,15 @@ func RenderPdf(theme themes.Theme, resume Resume) []byte {
 	pw, err := playwright.Run(&playwright.RunOptions{Browsers: []string{"chromium"}})
 	shared.HandleError(err)
 
-	// browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{Headless: playwright.Bool(false)})
 	browser, err := pw.Chromium.Launch()
 	shared.HandleError(err)
 
 	page, err := browser.NewPage()
 	shared.HandleError(err)
 
-	_, err = page.Goto("file://" + filepath.Join(dir, "resume.html"))
+	_, err = page.Goto("file://"+filepath.Join(dir, "resume.html"), playwright.PageGotoOptions{
+		WaitUntil: playwright.WaitUntilStateNetworkidle,
+	})
 	shared.HandleError(err)
 
 	_, err = page.PDF(playwright.PagePdfOptions{
